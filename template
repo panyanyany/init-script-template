@@ -15,8 +15,8 @@ cmd=""
 
 name=`basename $0`
 pid_file="/var/run/$name.pid"
-stdout_log="/var/log/$name.log"
-stderr_log="/var/log/$name.err"
+stdout_log="/var/log/$name/info.log"
+stderr_log="/var/log/$name/errors.log"
 
 get_pid() {
     cat "$pid_file"
