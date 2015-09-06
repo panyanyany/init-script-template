@@ -1,0 +1,34 @@
+# Ubuntu upstart file at /etc/init/myprogram.conf
+
+limit nofile 1000000 1000000
+
+kill timeout 60 # wait 60s between SIGTERM and SIGKILL.
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+#pre-start script
+#    mkdir -p /home/myhome/log/myprogram
+#    chmod 777 /home/myhome/log/myprogram
+#end script
+
+respawn
+respawn limit 5 30
+
+chdir /home/myhome/bin/myprogram
+setuid www-data
+setgid adm
+console log
+
+script
+  exec /home/myhome/bin/myprogram/myprogram -c=/home/myhome/bin/myprogram/etc/config.yaml >> /tmp/myprogram.panic.log 2>&1
+end script
+
+post-start script
+    PID=`pidof myprogram`
+    echo $PID > /var/run/adsys/myprogram.pid
+end script
+
+post-stop script
+    rm -f /var/run/adsys/myprogram.pid
+end script
